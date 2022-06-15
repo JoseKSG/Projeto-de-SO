@@ -1,1 +1,18 @@
+#!/bin/bash
 
+/usr/bin/time --format="%E %U %S %M" $1 $2 2>> dados.txt
+
+tr ':' ' ' < dados.txt > media.txt 
+
+real=$(awk '{print $2}' media.txt | paste -sd+ | bc)
+usr=$(awk '{print $3}' media.txt | paste -sd+ | bc)
+sys=$(awk '{print $4}' media.txt | paste -sd+ | bc)
+
+mem=$(awk '{print $5}' media.txt | paste -sd+ | bc)
+
+numline=$(wc --lines < media.txt)
+
+echo "$( bc <<< "scale=2; ${real} / ${numline}" )"
+echo "$( bc <<< "scale=2; ${usr} / ${numline}" )"
+echo "$( bc <<< "scale=2; ${kernel} / ${numline}" )"
+echo "$( bc <<< "scale=2;${mem} / ${numline}" )"
